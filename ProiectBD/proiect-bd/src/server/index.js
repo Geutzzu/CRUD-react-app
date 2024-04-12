@@ -24,19 +24,24 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
+    // Connect the client to the server (optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
 
     database = client.db("Formula1DB")
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    console.log(client.db("Formula1DB").collection("drivers").find().toArray()); /// FUNCTIONEAZA !!!
+
+    // Wait for the query to complete before logging the result
+    const result = await client.db("Formula1DB").collection("drivers").find().toArray();
+    console.log(result);
+  
   } finally {
     // Ensures that the client will close when you finish/error
     //await client.close();
   }
 }
+
 
 var PORT = 5500; /// 5500
 
@@ -79,6 +84,16 @@ app.get("/getDriver/:driverId", async (req, res) => {
   res.send(driver).status(200);
 });
 
+
+// GET a constructor by ID
+app.get("/getConstructor/:constructorId", async (req, res) => {
+  const constructorId = req.params.constructorId;
+
+  let collection = await database.collection("constructors");
+  let constructor = await collection.findOne({ _id: new ObjectId(constructorId) });
+
+  res.send(constructor).status(200);
+});
 
 
 // POST a new driver
