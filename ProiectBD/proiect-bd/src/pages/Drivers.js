@@ -27,30 +27,60 @@ function Drivers() {
   }, [constructorId]);
 
   useEffect(() => {
+    if (constructorId) {
     fetch(`http://localhost:5500/getConstructor/${constructorId}`, {
       method: 'GET'
     })
     .then(response => response.json())
     .then(constructor => setConstructor(constructor)) 
     .catch(error => console.error('Error fetce hing data:', error));
+  }
   }, [constructorId]);
 
 
 console.log(constructor);
 
-  return(
-    <div>
-      <h2>Drivers</h2>
+return(
+  <div>
+    <h2>Drivers</h2>
+    <table className="table">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Age</th>
+          <th>Nationality</th>
+          <th>Stats</th>
+        </tr>
+      </thead>
+      <tbody>
       {drivers.map(driver => (
-        <div key={driver._id.$oid}>
-          <h3>{driver.firstName} {driver.lastName}</h3>
-          <p>Age: {driver.age}</p>
-          <p>Team: {}</p>
-          <p>Nationality: {driver.nationality}</p>
-        </div>
+        <tr key={driver._id.$oid}>
+          <td>{driver.firstName}</td>
+          <td>{driver.lastName}</td>
+          <td>{driver.age}</td>
+          <td>{driver.nationality}</td>
+          <td>
+            <details>
+              <summary></summary>
+              <ul>
+                {Object.keys(driver.stats).map((statKey) => (
+                  <li key={statKey}>
+                    {`${statKey}: ${driver.stats[statKey]}`}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </td>
+        </tr>
       ))}
-    </div>
-  );
+      </tbody>
+    </table>
+    <Link to="/">
+      <button className="button">Back to Constructors</button>
+    </Link>
+  </div>
+);
 }
 
 export default Drivers;
