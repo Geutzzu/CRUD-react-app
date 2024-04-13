@@ -29,7 +29,7 @@ function Constructors() {
             <th>Championships</th>
             <th>Team Principal</th>
             <th>Principal Age</th>
-            <th>Actions</th>
+            <th>Drivers</th>
             <th>Add Driver</th> 
             <th>Edit Team Principal</th>
         </tr>
