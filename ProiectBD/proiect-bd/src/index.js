@@ -10,7 +10,7 @@ import {
 import Drivers from './pages/Drivers.js';
 import AddDriverForm from './pages/AddDriverForm.js';
 import EditDriverForm from './pages/EditDriverForm.js';
-import PlayerStats from './pages/PlayerStats.js';
+import EditPrincipal from './pages/EditPrincipal.js';
 
 const router = createBrowserRouter([
   {
@@ -26,12 +26,12 @@ const router = createBrowserRouter([
     element: <AddDriverForm/>
   },
   {
-    ///path: "/editDriver/:driverId",
-    ///element: <EditDriverForm/> NU CONTIN NIMIC ACUM
+    path: "/updateDriver/:driverId",
+    element: <EditDriverForm/> 
   },
   {
-    ///path: "/playerStats/:driverId",
-    ///element: <PlayerStats/> NU CONTIN NIMIC ACUM (NU AU EXPORT)
+    path: "/updateTeamPrincipal/:teamId",
+    element: <EditPrincipal/>
   }
 ]);
 

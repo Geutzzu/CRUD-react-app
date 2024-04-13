@@ -7,9 +7,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Drivers() {
   const [drivers, setDrivers] = useState([]);
   const [constructor, setConstructor] = useState(null);
+  const [deleteMode, setDeleteMode] = useState(false);
   const { constructorId: constructorId } = useParams(); /// nsh de unde vine typoul
 
   console.log(useParams());
+  console.log(constructorId, 1);
+  console.log(typeof constructorId, 2);
+  console.log(typeof useParams(), 3);
 
   const location = useLocation();
 
@@ -38,7 +42,19 @@ function Drivers() {
   }, [constructorId]);
 
 
-console.log(constructor);
+  const handleDelete = (driverId) => {
+    // Send DELETE request to backend
+    fetch(`http://localhost:5500/deleteDriver/${driverId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (response.ok) {
+            setDrivers(drivers.filter(driver => driver._id !== driverId));
+        }
+    })
+    .catch(error => console.error('Error deleting driver:', error));
+  };
+
 
 return(
   <div>
@@ -51,36 +67,63 @@ return(
           <th>Age</th>
           <th>Nationality</th>
           <th>Stats</th>
+          <th>{deleteMode ? 'Delete' : 'Edit'}</th>
         </tr>
       </thead>
       <tbody>
-      {drivers.map(driver => (
-        <tr key={driver._id.$oid}>
-          <td>{driver.firstName}</td>
-          <td>{driver.lastName}</td>
-          <td>{driver.age}</td>
-          <td>{driver.nationality}</td>
-          <td>
-            <details>
-              <summary></summary>
-              <ul>
-                {Object.keys(driver.stats).map((statKey) => (
-                  <li key={statKey}>
-                    {`${statKey}: ${driver.stats[statKey]}`}
-                  </li>
-                ))}
+        {drivers.map(driver => (
+          <tr key={driver._id.$oid}>
+            <td>{driver.firstName}</td>
+            <td>{driver.lastName}</td>
+            <td>{driver.age}</td>
+            <td>{driver.nationality}</td>
+            <td>
+              <details>
+                <summary></summary>
+                <ul>
+                {Object.keys(driver.stats).map((statKey) => {
+                  const formattedStatKey = statKey
+                    .replace(/_/g, ' ')
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+
+                  return (
+                    <li key={statKey}>
+                      {`${formattedStatKey}: ${driver.stats[statKey]}`}
+                    </li>
+                  );
+                })}
               </ul>
-            </details>
-          </td>
-        </tr>
-      ))}
+              </details>
+            </td>
+            <td>
+              {deleteMode ? (
+                <button type="button" className="btn btn-danger" onClick={() => handleDelete(driver._id)}>
+                  Delete
+                </button>
+              ) : (
+                <Link to={`/updateDriver/${driver._id}`} state={{ driverDataToEdit: driver }}>
+                  <button type="button" className="btn btn-primary">Edit</button>
+                </Link>
+              )}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
     <Link to="/">
       <button className="button">Back to Constructors</button>
     </Link>
+    <button 
+      className="exit-button" 
+      style={{backgroundColor: deleteMode ? 'blue' : 'red'}}
+      onClick={() => setDeleteMode(!deleteMode)}
+    >
+      Toggle {deleteMode ? 'Edit' : 'Delete'} Mode
+    </button>
   </div>
 );
-}
+};
 
 export default Drivers;

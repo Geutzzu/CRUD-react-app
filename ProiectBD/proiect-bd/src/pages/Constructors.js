@@ -22,31 +22,43 @@ function Constructors() {
     return(
         <div>
         <h2>My Constructors</h2>
-        <table className="table">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Championships</th>
-                <th>Team Principal</th>
-                <th>Principal Age</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {constructors.map(item => (
-                <tr key={item._id}>
-                    <td>{item.name}</td>
-                    <td>{item.constructorsChampionships}</td>
-                    <td>{item.teamPrincipal.firstName} {item.teamPrincipal.lastName}</td>
-                    <td>{item.teamPrincipal.age}</td>
-                    <td> 
+    <table className="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Championships</th>
+            <th>Team Principal</th>
+            <th>Principal Age</th>
+            <th>Actions</th>
+            <th>Add Driver</th> 
+            <th>Edit Team Principal</th>
+        </tr>
+        </thead>
+        <tbody>
+        {constructors.map(item => (
+            <tr key={item._id}>
+                <td>{item.name}</td>
+                <td>{item.constructorsChampionships}</td>
+                <td>{item.teamPrincipal.firstName} {item.teamPrincipal.lastName}</td>
+                <td>{item.teamPrincipal.age}</td>
+                <td> 
                     <Link to={`/drivers/${item._id}`}>
                         View Drivers 
                     </Link>
-                    </td> 
-                </tr>
-            ))}
-            </tbody>
+                </td> 
+                <td>
+                    <Link to={`/addDriver`} state={{ constructorId: item._id }}>
+                        Add Driver
+                    </Link>
+                </td>
+                <td>
+                <Link to={`/updateTeamPrincipal/${item._id}`} state={{ teamPrincipal: item.teamPrincipal, teamId: item._id }}>
+                    Edit Team Principal
+                </Link>
+                </td>
+            </tr>
+        ))}
+        </tbody>
         </table>
         </div>
     );

@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function NewDriverForm() {
     const [firstName, setFirstName] = useState('');
@@ -16,11 +17,16 @@ function NewDriverForm() {
     const location = useLocation();
     const { constructorId } = location.state;
 
+    console.log(location.state, 1)
+    console.log(useParams(), 2)
+    console.log(constructorId, 3);
+    console.log(typeof constructorId, 4)
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
         // Send a POST request to your backend API endpoint to add the new driver
-        fetch('http://localhost:55000/addDriver', {
+        fetch('http://localhost:5500/addDriver', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -93,8 +99,13 @@ function NewDriverForm() {
                     <label htmlFor="formerTeams" className="form-label">Former Teams</label>
                     <input type="text" className="form-control" id="formerTeams" value={formerTeams} onChange={(e) => setFormerTeams(e.target.value)} placeholder="Enter teams separated by commas" />
                 </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="button">Submit</button>
+                <Link to="/">
+                    <button type="button" className="exit-button">Back to Constructors</button>
+                </Link>
             </form>
+
+           
         </div>
     );
 }

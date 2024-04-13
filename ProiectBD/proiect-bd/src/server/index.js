@@ -99,10 +99,14 @@ app.get("/getConstructor/:constructorId", async (req, res) => {
 // POST a new driver
 app.post("/addDriver", async (req, res) => {
   const { firstName, lastName, constructorId, nationality, age, stats } = req.body;
+
+  // Convert constructorId to ObjectId
+  const constructorObjectId = new ObjectId(constructorId);
+
   const newDocument = {
       firstName,
       lastName,
-      constructorId: new ObjectId(constructorId),
+      constructorId: constructorObjectId,
       nationality,
       age,
       stats
@@ -114,15 +118,56 @@ app.post("/addDriver", async (req, res) => {
 
 // PATCH (update) a driver by ID
 app.patch("/updateDriver/:driverId", async (req, res) => {
-  const driverId = req.params.driverId;
-  const updates = req.body;
+  try {
+      const { driverId, newFirstName, newLastName, newNationality, newAge, newStats } = req.body;
 
-  let collection = await database.collection("drivers");
-  let result = await collection.updateOne(
-      { _id: new ObjectId(driverId) },
-      { $set: updates }
-  );
-  res.send(result).status(200);
+      const query = { _id: new ObjectId(driverId) };
+      const updates = {
+          $set: {
+              firstName: newFirstName,
+              lastName: newLastName,
+              nationality: newNationality,
+              age: newAge,
+              stats: newStats
+          },
+      };
+
+      let collection = await database.collection("drivers");
+      let result = await collection.updateOne(query, updates);
+      res.send(result).status(200);
+  } catch (err) {
+      console.error(err);
+      res.status(500).send("Error updating driver");
+  }
+});
+
+
+
+// PATCH a team principal by team ID
+app.patch("/updateTeamPrincipal/:teamId", async (req, res) => {
+  try {
+    const { teamId, newPrincipal } = req.body;
+
+    console.log(teamId, newPrincipal);
+
+
+    const query = { _id: new ObjectId(teamId) };
+    const updates = {
+      $set: {
+        'teamPrincipal.firstName': newPrincipal.firstName,
+        'teamPrincipal.lastName': newPrincipal.lastName,
+        'teamPrincipal.age': newPrincipal.age,
+      },
+    };
+
+    let collection = await database.collection("constructors");
+    let result = await collection.updateOne(query, updates);
+    console.log(result);
+    res.send(result).status(200);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error updating team principal");
+  }
 });
 
 // DELETE a driver by ID
