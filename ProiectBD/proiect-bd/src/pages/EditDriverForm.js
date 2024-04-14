@@ -36,7 +36,6 @@ function EditDriverForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Send a PATCH request to your backend API endpoint to edit the driver
         fetch(`http://localhost:5500/updateDriver/${driverDataToEdit._id}`, {
             method: 'PATCH',
             headers: {

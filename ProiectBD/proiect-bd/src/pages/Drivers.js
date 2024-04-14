@@ -8,7 +8,7 @@ function Drivers() {
   const [drivers, setDrivers] = useState([]);
   const [constructor, setConstructor] = useState(null);
   const [deleteMode, setDeleteMode] = useState(false);
-  const { constructorId: constructorId } = useParams(); /// nsh de unde vine typoul
+  const { constructorId: constructorId } = useParams(); 
 
   console.log(useParams());
   console.log(constructorId, 1);
@@ -20,7 +20,6 @@ function Drivers() {
 
   useEffect(() => {
     if (constructorId) {
-      // Fetch data from API
       fetch(`http://localhost:5500/drivers/${constructorId}`, {
         method: 'GET'
       })
@@ -43,7 +42,6 @@ function Drivers() {
 
 
   const handleDelete = (driverId) => {
-    // Send DELETE request to backend
     fetch(`http://localhost:5500/deleteDriver/${driverId}`, {
         method: 'DELETE'
     })

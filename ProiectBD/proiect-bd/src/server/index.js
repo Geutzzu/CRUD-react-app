@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 let database;
 
-const uri = "mongodb+srv://Geutzzu:Tab15987463@cluster0.q0w5fj6.mongodb.net/";
+const uri = "mongodb+srv://Geutzzu:Tab15987463@cluster0.q0w5fj6.mongodb.net/"; /// Can be made with a .env file
 
 console.log("Connecting to MongoDB...");
 
@@ -38,7 +38,7 @@ async function run() {
   
   } finally {
     // Ensures that the client will close when you finish/error
-    //await client.close();
+    // await client.close();
   }
 }
 
@@ -100,7 +100,6 @@ app.get("/getConstructor/:constructorId", async (req, res) => {
 app.post("/addDriver", async (req, res) => {
   const { firstName, lastName, constructorId, nationality, age, stats } = req.body;
 
-  // Convert constructorId to ObjectId
   const constructorObjectId = new ObjectId(constructorId);
 
   const newDocument = {
@@ -113,6 +112,25 @@ app.post("/addDriver", async (req, res) => {
   }
   let collection = await database.collection("drivers");
   let result = await collection.insertOne(newDocument);
+  res.send(result).status(201);
+});
+
+
+// POST a new constructor
+app.post("/addConstructor", async (req, res) => {
+  const { name, constructorsChampionships, teamPrincipal, driverIds } = req.body;
+
+  ///const driverObjectIds = driverIds.map(id => new ObjectId(id)); Am vrut sa folosesc idurile aici dar nu are mult sens (doar daca vrei read mai rapid la pret de write mai lent)
+
+  const newConstructor = {
+    name,
+    constructorsChampionships,
+    teamPrincipal,
+    ///driverIds: driverObjectIds
+  }
+
+  let collection = await database.collection("constructors");
+  let result = await collection.insertOne(newConstructor);
   res.send(result).status(201);
 });
 
@@ -143,6 +161,7 @@ app.patch("/updateDriver/:driverId", async (req, res) => {
 
 
 
+
 // PATCH a team principal by team ID
 app.patch("/updateTeamPrincipal/:teamId", async (req, res) => {
   try {
@@ -170,6 +189,36 @@ app.patch("/updateTeamPrincipal/:teamId", async (req, res) => {
   }
 });
 
+// PATCH a constructor by ID
+app.patch("/updateTeam/:teamId", async (req, res) => {
+    try {
+
+        console.log(req.body);
+        console.log(req.params)
+
+        const { teamId: teamId, name: name, constructorsChampionships: constructorsChampionships } = req.body;
+
+        console.log(teamId, name, constructorsChampionships);
+
+        const query = { _id: new ObjectId(teamId) };
+        const updates = {
+            $set: {
+                'name': name,
+                'constructorsChampionships': constructorsChampionships,
+            },
+        };
+
+        let collection = await database.collection("constructors");
+        let result = await collection.updateOne(query, updates);
+        console.log(result);
+        res.send(result).status(200);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating team");
+    }
+});
+
+
 // DELETE a driver by ID
 app.delete("/deleteDriver/:driverId", async (req, res) => {
   const driverId = req.params.driverId;
@@ -181,4 +230,15 @@ app.delete("/deleteDriver/:driverId", async (req, res) => {
 });
 
 
+
+
+// DELETE a constructor by ID
+app.delete("/deleteConstructor/:constructorId", async (req, res) => {
+  const constructorId = req.params.constructorId;
+
+  let collection = await database.collection("constructors");
+  let result = await collection.deleteOne({ _id: new ObjectId(constructorId) });
+
+  res.send(result).status(200);
+});
 

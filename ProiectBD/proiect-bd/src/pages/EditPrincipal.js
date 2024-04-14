@@ -26,7 +26,6 @@ function EditTeamPrincipalForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Send a PATCH request to your backend API endpoint to edit the team principal
         fetch(`http://localhost:5500/updateTeamPrincipal/${teamId}`, {
             method: 'PATCH',
             headers: {

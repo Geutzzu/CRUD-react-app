@@ -25,7 +25,6 @@ function NewDriverForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Send a POST request to your backend API endpoint to add the new driver
         fetch('http://localhost:5500/addDriver', {
             method: 'POST',
             headers: {
