@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -9,7 +11,7 @@ app.use(bodyParser.json());
 
 let database;
 
-const uri = "mongodb+srv://Geutzzu:Tab15987463@cluster0.q0w5fj6.mongodb.net/"; /// Can be made with a .env file
+const uri = process.env.MONGODB_URI;
 
 console.log("Connecting to MongoDB...");
 
