@@ -1,4 +1,4 @@
-Simple MERN stack application made for a school project. It manages a formula 1 database where you can add, remove or edit teams and drivers from the F1 grid. 
+Simple MERN stack application made for a school project. It manages a formula 1 database where you can add, remove or edit teams and drivers from the F1 grid. The link to the database is not present and you would have to make your own mongodb cluster in order to run the app yourself.
 
 - You can run the server by running the following command: 
 ![image](https://github.com/user-attachments/assets/e0aead30-abd7-42fd-ac18-15d982fbad4f)
